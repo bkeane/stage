@@ -17,12 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          depth: 0
+          fetch-depth: 0
           ref: ${{ env.RELEVANT_SHA }}
       - uses: ./.github/actions/build
 
   s3:
     runs-on: ubuntu-latest
+    needs: build
     env:
       RELEVANT_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
     permissions:
@@ -36,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          depth: 0
+          fetch-depth: 0
           ref: ${{ env.RELEVANT_SHA }}
       - uses: ./.github/actions/stages
         with:
