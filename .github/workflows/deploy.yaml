@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      RELEVANT_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          depth: 0
+          ref: ${{ env.RELEVANT_SHA }}
+      - uses: ./.github/actions/build
+
+  s3:
+    runs-on: ubuntu-latest
+    env:
+      RELEVANT_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        account:
+          - prod
+          - dev
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          depth: 0
+          ref: ${{ env.RELEVANT_SHA }}
+      - uses: ./.github/actions/stages
+        with:
+          stage: s3
+          account: ${{ matrix.account }}
+          region: us-west-2
+
+
