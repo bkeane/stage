@@ -1,6 +1,6 @@
 # Stage
 
-Stage provides a means to easily manage cross account OIDC based AWS role assumption. 
+Stage provides a means to easily manage complex cross account OIDC based AWS role assumption within Github Actions Workflows.
 
 ## Idea
 
