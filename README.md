@@ -26,20 +26,21 @@ Similarly...
 ## Paradigma
 
 Instead of considering software pipelines from the self-evident order of activity they generally follow, it is far more useful a framework to think 
-of a pipelines' **stages** from a security lense. RPC systems are stomping ground of overpriviledged and under-scrutinized software execution.
-
-What this leads to more often than not is the presentation of secret material in a rather intractable fashion to a multitude of quickly chosen tooling.
+of a pipelines' **stages** from a security lense. RPC systems are the stomping ground of overpriviledged and under-scrutinized software execution. A
+place where secret material is presented to a rapidly changing landscape of needs-based-tooling of impenetrably complex dependency hazards.
 
 Some companies choose to solve this supply chain vector through the constraint of tooling via committee; a universally disliked approach due to mixed directives.
 Move as quickly as possible, but also don't forget to pass through the eye of that needle over there.
 
 Stage proposes that software pipelines be architected primarily through access design and not by the self-evident phases of software in nature.
 
-The End-to-End tests probably don't need to be able to push new oci images, and the build process probably doesn't need access to that `client_id` / `client_secret` pair.
+The End-to-End tests probably don't need to be able to overwrite oci images, and the build process probably doesn't need access to that `client_id` / `client_secret` pair.
 
 Just as `kubectl apply` doesn't need `s3:DeleteObject` and the unit tests don't need access to a valid `~/.kube/config`.
 
-The solution is to make easy and tractable the priviledge given to the tooling we use.
+The solution is to make easy the modeling and tractablility of priviledge given to the tooling we use.
+
+## The Parts
 
 ### Topology Module
 
