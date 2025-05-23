@@ -11,7 +11,7 @@ The general categories of Continuous Integration and Continuous Deployment are d
 - Integration consists of unit testing, building and publishing artifacts from source code.
 - Deployment is the set of activities required to bring those artifacts into production or service.
 
-The problem is that these definitions provides little to no practical information. 
+The problem is that these definitions provide little to no practical information. 
 
 > "All bachelors are unmarried." - Kant
 
@@ -147,11 +147,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    strategy:
-      matrix:
-        account:
-          - prod
-          - dev
     steps:
       - uses: actions/checkout@v4
         with:
