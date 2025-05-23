@@ -26,8 +26,8 @@ Similarly...
 ## Paradigma
 
 Instead of considering software pipelines from the self-evident order of activity they generally follow, it is far more useful a framework to think 
-of a pipelines' **stages** from a security lense. RPC systems are the stomping ground of overpriviledged and under-scrutinized software execution. A
-place where secret material is presented to a rapidly changing landscape of needs-based-tooling of impenetrably complex dependency hazards.
+of a pipeline segmented into **stages** through a security lense. RPC systems are the stomping ground of overpriviledged and under-scrutinized software execution. A
+place where secret material is presented to a rapidly changing landscape of needs-based-tooling reprisentative of supply chain vectors.
 
 Some companies choose to solve this supply chain vector through the constraint of tooling via committee; a universally disliked approach due to mixed directives.
 Move as quickly as possible, but also don't forget to pass through the eye of that needle over there.
