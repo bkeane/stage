@@ -15,11 +15,11 @@ The problem is that these definitions provides little to no practical informatio
 
 > "All bachelors are unmarried." - Kant
 
-As Kant points out about the Synthetic v Analytic, we learn nothing of bachelors here despite the superflous language. 
+As Kant [points out](https://en.wikipedia.org/wiki/Analytic%E2%80%93synthetic_distinction) we learn nothing of bachelors here despite the superflous language. 
 
 Similarly...
 
-> All integrations happen before deployments.
+> "All integrations happen before deployments." - Bertrand Russell
 
 ...tells us nothing new.
 
