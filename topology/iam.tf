@@ -1,3 +1,7 @@
+locals {
+  ecr_mgmt = local.resources[local.account_lookup[local.account_id]][var.ecr_stage_name]
+}
+
 #
 # Push Role
 #

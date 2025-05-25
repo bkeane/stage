@@ -13,7 +13,7 @@ locals {
     account_ids = toset([ for id in values(var.accounts) : id ])
     account_region = data.aws_region.current.name
     account_lookup = {
-      for name, id in var.topology.accounts: id => name
+      for name, id in local.account_ids: id => name
     }
 
     // Git Information
