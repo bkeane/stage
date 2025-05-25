@@ -47,7 +47,7 @@ locals {
     // Add in ECR management stage to topology account.
     {
       "${local.account_lookup[local.account_id]}" = {
-        var.ecr_stage_name = {
+        "${var.ecr_stage_name}" = {
           role_name = "${local.git.repo}-ecr-mgmt-role"
           role_arn = "arn:aws:iam::${local.account_id}:role/${local.git.repo}-ecr-mgmt-role"
           policy_name = "${local.git.repo}-ecr-mgmt-policy"
