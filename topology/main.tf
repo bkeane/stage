@@ -4,6 +4,10 @@ terraform {
       source  = "northwood-labs/corefunc"
       version = "~> 1.0"
     }
+    deepmerge = {
+      source = "isometry/deepmerge"
+      version = "1.0.0"
+    }
   }
 }
 
@@ -31,8 +35,22 @@ locals {
       subject_claim = "repo:${local.git.owner}/${local.git.repo}:*"
     }
 
-    // Seeded data structure with ECR management stage
-    seeded = {
+    // Build base resources map for all accounts and stages
+    stage_resources = {
+      for account, id in var.accounts: account => {
+        for stage in var.stages: stage => {
+          role_name = "${local.git.repo}-${stage}-role"
+          role_arn = "arn:aws:iam::${id}:role/${local.git.repo}-${stage}-role"
+          policy_name = "${local.git.repo}-${stage}-policy"
+          policy_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-policy"
+          permissions_boundary_name = "${local.git.repo}-${stage}-permissions-boundary"
+          permissions_boundary_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-permissions-boundary"
+        }
+      }
+    }
+
+    // ECR Management Stage
+    ecr_mgmt_resource = {
       "${local.account_lookup[local.account_id]}" = {
         "${var.ecr_stage_name}" = {
           role_name = "${local.git.repo}-ecr-mgmt-role"
@@ -45,22 +63,7 @@ locals {
       }
     }
 
-    // Build complete resources map by merging standard stages with seeded data
-    resources = {
-      for account, id in var.accounts: account => {
-        for stage in var.stages: stage => merge(
-          lookup(local.seeded, account, {})[stage],
-          {
-            role_name = "${local.git.repo}-${stage}-role"
-            role_arn = "arn:aws:iam::${id}:role/${local.git.repo}-${stage}-role"
-            policy_name = "${local.git.repo}-${stage}-policy"
-            policy_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-policy"
-            permissions_boundary_name = "${local.git.repo}-${stage}-permissions-boundary"
-            permissions_boundary_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-permissions-boundary"
-          }
-        )
-      }
-    }
+    resources = provider::deepmerge::mergo(local.stage_resources, local.ecr_mgmt_resource)
 }
 
 data "aws_caller_identity" "current" {}
