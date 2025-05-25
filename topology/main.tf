@@ -26,16 +26,6 @@ locals {
         owner  = local.repo_path_parts[0]
     }
 
-    // Push Role
-    ecr_stage = {
-      role_name = "${local.git.repo}-ecr-mgmt-role"
-      role_arn = "arn:aws:iam::${local.account_id}:role/${local.git.repo}-ecr-mgmt-role"
-      policy_name = "${local.git.repo}-ecr-mgmt-policy"
-      policy_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-policy"
-      permissions_boundary_name = "${local.git.repo}-ecr-mgmt-permissions-boundary"
-      permissions_boundary_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-permissions-boundary"
-    }
-
     // OIDC
     oidc = {
       subject_claim = "repo:${local.git.owner}/${local.git.repo}:*"
@@ -53,15 +43,17 @@ locals {
           permissions_boundary_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-permissions-boundary"
         }
       }
-    }, {
+    }, 
+    // Add in ECR management stage to topology account.
+    {
       "${local.account_lookup[local.account_id]}" = {
         var.ecr_stage_name = {
-          role_name = "${local.git.repo}-${var.ecr_stage_name}-role"
-          role_arn = "arn:aws:iam::${data.account_id}:role/${local.git.repo}-${var.ecr_stage_name}-role"
-          policy_name = "${local.git.repo}-${var.ecr_stage_name}-policy"
-          policy_arn = "arn:aws:iam::${data.account_id}:policy/${local.git.repo}-build-policy"
-          permissions_boundary_name = "${local.git.repo}-build-permissions-boundary"
-          permissions_boundary_arn = "arn:aws:iam::${data.account_id}:policy/${local.git.repo}-build-permissions-boundary"
+          role_name = "${local.git.repo}-ecr-mgmt-role"
+          role_arn = "arn:aws:iam::${local.account_id}:role/${local.git.repo}-ecr-mgmt-role"
+          policy_name = "${local.git.repo}-ecr-mgmt-policy"
+          policy_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-policy"
+          permissions_boundary_name = "${local.git.repo}-ecr-mgmt-permissions-boundary"
+          permissions_boundary_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-permissions-boundary"
         }
       }
     })
