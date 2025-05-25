@@ -14,6 +14,10 @@ output "resources" {
     value = local.resources
 }
 
+output "repositories" {
+    value = var.repositories
+}
+
 output "ecr_action" {
     value = yamlencode(local.build_stage)
 }
