@@ -1,32 +1,6 @@
 locals {
   validate = file("${path.module}/scripts/validate.js")
 
-  build_stage = {
-    name = "ecr stage"
-    description = ""
-
-    runs = {
-      using = "composite"
-      steps = [
-        {
-          name = "assume role"
-          id = "assume-role"
-          uses = "aws-actions/configure-aws-credentials@v2"
-          with = {
-            role-to-assume = aws_iam_role.ecr_stage.arn
-            role-session-name = "${local.git.repo}-ecr-session"
-            aws-region = local.account_region
-          }
-        },
-        {
-          name = "ecr login"
-          id = "ecr-login"
-          uses = "aws-actions/amazon-ecr-login@v2"
-        }
-      ]
-    }
-  }
-
   stages = {
     name        = "setup stage"
     description = ""

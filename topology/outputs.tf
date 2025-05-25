@@ -10,6 +10,10 @@ output "accounts" {
     value = var.accounts
 }
 
+output "account_lookup" {
+    value = local.account_lookup
+}
+
 output "resources" {
     value = local.resources
 }
@@ -18,10 +22,6 @@ output "repositories" {
     value = var.repositories
 }
 
-output "ecr_action" {
-    value = yamlencode(local.build_stage)
-}
-
-output "stage_action" {
+output "action" {
     value = yamlencode(local.stages)
 }

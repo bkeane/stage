@@ -1,10 +1,6 @@
 locals {
-    account_lookup = {
-      for name, id in var.topology.accounts: id => name
-    }
-
     account_id = data.aws_caller_identity.current.account_id
-    account_name = local.account_lookup[local.account_id]
+    account_name = var.topology.account_lookup[local.account_id]
     account_region = data.aws_region.current.name
 
     resources = var.topology.resources[local.account_name][var.stage]

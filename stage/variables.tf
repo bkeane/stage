@@ -2,6 +2,7 @@ variable "topology" {
     description = "topology"
     type = object({
         accounts = map(string)
+        account_lookup = map(string)
         git = object({
             repo = string
             owner = string
@@ -16,6 +17,12 @@ variable "topology" {
             permissions_boundary_name = string
             permissions_boundary_arn = string
         })))
+        ecr_stage = object({
+            role_name = string
+            role_arn = string
+            policy_name = string
+            policy_arn = string
+        })
         repositories = set(string)
         oidc = object({
             subject_claim = string

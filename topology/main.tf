@@ -12,6 +12,9 @@ locals {
     account_id = data.aws_caller_identity.current.account_id
     account_ids = toset([ for id in values(var.accounts) : id ])
     account_region = data.aws_region.current.name
+    account_lookup = {
+      for name, id in var.topology.accounts: id => name
+    }
 
     // Git Information
     repo_path = replace(data.corefunc_url_parse.origin.path, ".git", "")
@@ -25,10 +28,12 @@ locals {
 
     // Push Role
     ecr_stage = {
-      role_name = "${local.git.repo}-push-role"
-      role_arn = "arn:aws:iam::${local.account_id}:role/${local.git.repo}-push-role"
-      policy_name = "${local.git.repo}-push-policy"
-      policy_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-push-policy"
+      role_name = "${local.git.repo}-ecr-mgmt-role"
+      role_arn = "arn:aws:iam::${local.account_id}:role/${local.git.repo}-ecr-mgmt-role"
+      policy_name = "${local.git.repo}-ecr-mgmt-policy"
+      policy_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-policy"
+      permissions_boundary_name = "${local.git.repo}-ecr-mgmt-permissions-boundary"
+      permissions_boundary_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-permissions-boundary"
     }
 
     // OIDC
@@ -48,7 +53,20 @@ locals {
           permissions_boundary_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-permissions-boundary"
         }
       }
+    }, {
+      "${local.account_lookup[local.account_id]}" = {
+        var.ecr_stage_name = {
+          role_name = "${local.git.repo}-${var.ecr_stage_name}-role"
+          role_arn = "arn:aws:iam::${data.account_id}:role/${local.git.repo}-${var.ecr_stage_name}-role"
+          policy_name = "${local.git.repo}-${var.ecr_stage_name}-policy"
+          policy_arn = "arn:aws:iam::${data.account_id}:policy/${local.git.repo}-build-policy"
+          permissions_boundary_name = "${local.git.repo}-build-permissions-boundary"
+          permissions_boundary_arn = "arn:aws:iam::${data.account_id}:policy/${local.git.repo}-build-permissions-boundary"
+        }
+      }
     })
+
+    
 }
 
 data "aws_caller_identity" "current" {}

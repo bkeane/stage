@@ -21,6 +21,12 @@ variable "accounts" {
     }
 }
 
+variable "ecr_stage_name" {
+    description = "ECR stage name"
+    type = string
+    default = "build"
+}
+
 variable "stages" {
     description = "List of stage names"
     type = set(string)

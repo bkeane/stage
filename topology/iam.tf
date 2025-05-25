@@ -2,8 +2,8 @@
 # Push Role
 #
 
-resource "aws_iam_role" "ecr_stage" {
-  name                  = local.ecr_stage.role_name
+resource "aws_iam_role" "ecr_mgmt" {
+  name                  = local.ecr_mgmt.role_name
   description           = ""
   assume_role_policy    = data.aws_iam_policy_document.trust.json
   force_detach_policies = true
@@ -34,18 +34,18 @@ data "aws_iam_policy_document" "trust" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ecr_stage" {
-  role       = aws_iam_role.ecr_stage.name
-  policy_arn = aws_iam_policy.ecr_stage.arn
+resource "aws_iam_role_policy_attachment" "ecr_mgmt" {
+  role       = aws_iam_role.ecr_mgmt.name
+  policy_arn = aws_iam_policy.ecr_mgmt.arn
 }
 
-resource "aws_iam_policy" "ecr_stage" {
-  name        = local.ecr_stage.policy_name
+resource "aws_iam_policy" "ecr_mgmt" {
+  name        = local.ecr_mgmt.policy_name
   description = ""
-  policy      = data.aws_iam_policy_document.ecr_stage.json
+  policy      = data.aws_iam_policy_document.ecr_mgmt.json
 }
 
-data "aws_iam_policy_document" "ecr_stage" {
+data "aws_iam_policy_document" "ecr_mgmt" {
   statement {
     sid    = "AllowEcrRegistryRead"
     effect = "Allow"
