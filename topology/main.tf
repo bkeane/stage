@@ -31,21 +31,8 @@ locals {
       subject_claim = "repo:${local.git.owner}/${local.git.repo}:*"
     }
 
-    // Resources
-    resources = merge({
-      for account, id in var.accounts: account => {
-        for stage in var.stages: stage => {
-          role_name = "${local.git.repo}-${stage}-role"
-          role_arn = "arn:aws:iam::${id}:role/${local.git.repo}-${stage}-role"
-          policy_name = "${local.git.repo}-${stage}-policy"
-          policy_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-policy"
-          permissions_boundary_name = "${local.git.repo}-${stage}-permissions-boundary"
-          permissions_boundary_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-permissions-boundary"
-        }
-      }
-    }, 
-    // Add in ECR management stage to topology account.
-    {
+    // Seeded data structure with ECR management stage
+    seeded = {
       "${local.account_lookup[local.account_id]}" = {
         "${var.ecr_stage_name}" = {
           role_name = "${local.git.repo}-ecr-mgmt-role"
@@ -56,9 +43,24 @@ locals {
           permissions_boundary_arn = "arn:aws:iam::${local.account_id}:policy/${local.git.repo}-ecr-mgmt-permissions-boundary"
         }
       }
-    })
+    }
 
-    
+    // Build complete resources map by merging standard stages with seeded data
+    resources = {
+      for account, id in var.accounts: account => {
+        for stage in var.stages: stage => merge(
+          lookup(local.seeded, account, {})[stage],
+          {
+            role_name = "${local.git.repo}-${stage}-role"
+            role_arn = "arn:aws:iam::${id}:role/${local.git.repo}-${stage}-role"
+            policy_name = "${local.git.repo}-${stage}-policy"
+            policy_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-policy"
+            permissions_boundary_name = "${local.git.repo}-${stage}-permissions-boundary"
+            permissions_boundary_arn = "arn:aws:iam::${id}:policy/${local.git.repo}-${stage}-permissions-boundary"
+          }
+        )
+      }
+    }
 }
 
 data "aws_caller_identity" "current" {}
