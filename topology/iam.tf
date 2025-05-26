@@ -64,11 +64,17 @@ data "aws_iam_policy_document" "ecr_mgmt" {
   statement {
     sid    = "AllowEcrRepositoryWrite"
     effect = "Allow"
+
     actions = [
       "ecr:*",
     ]
-    resources = [
-        for repo in var.repositories: "arn:aws:ecr:*:${local.account_id}:repository/${repo}"
-    ]
+
+    resources = flatten([
+        for repo in var.repositories: 
+        [
+          "arn:aws:ecr:*:${local.account_id}:repository/${repo}",
+          "arn:aws:ecr:*:${local.account_id}:repository/${repo}/*"
+        ]
+    ])
   }
 }
