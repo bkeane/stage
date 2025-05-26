@@ -48,7 +48,7 @@ locals {
         {
           name = "assume role"
           id = "assume-role"
-          uses = "aws-actions/configure-aws-credentials@v2"
+          uses = "aws-actions/configure-aws-credentials@v4"
           with = {
             role-to-assume = "$${{ steps.validation.outputs.role_arn }}"
             role-session-name = "$${{ inputs.account }}-$${{ inputs.stage }}-session"
