@@ -1,6 +1,11 @@
 # Stage
 
-Stage provides a means to easily manage complex cross account OIDC based AWS role assumption within Github Actions Workflows.
+Stage provides a means to easily manage complex cross account OIDC based AWS role assumption within Github Actions Workflows. It assumes strong reliance on container based workflows via
+ECR.
+
+Stage provides:
+  - Hub and Spoke cross-account ECR access.
+  - A generated github action for cross-account AWS role assumption.
 
 ## Idea
 
@@ -29,9 +34,6 @@ Instead of considering software pipelines from the self-evident order of activit
 of a pipeline segmented into **stages** through a security lense. RPC systems are the stomping ground of overpriviledged and under-scrutinized software execution. A
 place where secret material is presented to a rapidly changing landscape of needs-based-tooling reprisentative of supply chain vectors.
 
-Some companies choose to solve this supply chain vector through the constraint of tooling via committee; a universally disliked approach due to mixed directives.
-Move as quickly as possible, but also don't forget to pass through the eye of that needle over there.
-
 Stage proposes that software pipelines be architected primarily through access design and not by the self-evident phases of software in nature.
 
 The End-to-End tests probably don't need to be able to overwrite oci images, and the build process probably doesn't need access to that `client_id` / `client_secret` pair.
@@ -44,10 +46,13 @@ The solution is to make easy the modeling and tractablility of priviledge given 
 
 ### Topology Module
 
+The topology module is only created in the account in which you wish to centralize your ECR repositories.
+
 The topology module...
 1. Creates ECR repositories.
 1. Configures cross-account read access on ECR repositories.
-1. Internally generates topological contract for `stage` module.
+1. Creates special `build` role under topology account.
+1. Internally generates topological data contract for `stage` module.
 
 example:
 ```terraform
@@ -182,3 +187,19 @@ jobs:
 
       # Insert deployment steps here
 ```
+
+### The ECR Management Stage
+
+As mentioned before, the topology module injects a single stage under the same account the topology module is applied. The name can be modified with the `ecr_stage_name` attribute and by default the stage is named `build`.
+
+This role is to be used for read-write access to ECR. It should be used by build / push steps.
+
+```yaml
+      - uses: ./.github/actions/stages
+        with:
+          stage: build
+          account: ecr-account
+          region: us-west-2
+```
+
+Unlike other stages, this stage is not available in all accounts.
