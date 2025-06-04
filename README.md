@@ -56,6 +56,14 @@ The topology module...
 
 example:
 ```terraform
+resource "aws_ecr_repository" "weebler" {
+  name = "widgetfactory/weebler/api"
+}
+
+resource "aws_ecr_repository" "wobbler" {
+  name = widgetfactory/wobbler/api
+}
+
 module "topology" {
     source = "../../topology"
     origin = "https://github.com/bkeane/stage.git"
@@ -73,9 +81,9 @@ module "topology" {
     ]
 
     # ECR Image Paths.
-    repositories = [
-        "widgetfactory/weebler/api",
-        "widgetfactory/wobbler/api"
+    ecr_repositories = [
+        aws_ecr_repository.weebler,
+        aws_ecr_repository.wobbler
     ]
 }
 

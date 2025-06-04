@@ -18,8 +18,8 @@ output "resources" {
     value = local.resources
 }
 
-output "repositories" {
-    value = var.repositories
+output "ecr_repositories" {
+    value = var.ecr_repositories
 }
 
 output "action" {

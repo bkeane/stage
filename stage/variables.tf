@@ -17,7 +17,10 @@ variable "topology" {
             permissions_boundary_name = string
             permissions_boundary_arn = string
         })))
-        repositories = set(string)
+        ecr_repositories = set(object({
+            arn = string
+            repository_url = string
+        }))
         oidc = object({
             subject_claim = string
         })

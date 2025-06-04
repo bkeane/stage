@@ -4,10 +4,6 @@ terraform {
       source  = "northwood-labs/corefunc"
       version = "~> 1.0"
     }
-    deepmerge = {
-      source = "isometry/deepmerge"
-      version = "1.0.0"
-    }
   }
 }
 
@@ -63,7 +59,7 @@ locals {
       }
     }
 
-    resources = provider::deepmerge::mergo(local.stage_resources, local.ecr_mgmt_resource)
+    resources = module.merged_stages.merged
 }
 
 data "aws_caller_identity" "current" {}
@@ -76,4 +72,13 @@ data "corefunc_url_parse" "origin" {
 
 data "aws_iam_openid_connect_provider" "github" {
   arn = "arn:aws:iam::${local.account_id}:oidc-provider/token.actions.githubusercontent.com"
+}
+
+module "merged_stages" {
+  source  = "Invicton-Labs/deepmerge/null"
+  version = "0.1.5"
+  maps = [
+    local.stage_resources,
+    local.ecr_mgmt_resource
+  ]
 }

@@ -21,20 +21,21 @@ variable "accounts" {
     }
 }
 
+variable "stages" {
+    description = "List of stage names"
+    type = set(string)
+}
+
 variable "ecr_stage_name" {
     description = "ECR stage name"
     type = string
     default = "build"
 }
 
-variable "stages" {
-    description = "List of stage names"
-    type = set(string)
+variable "ecr_repositories" {
+    description = "ECR repositories on which to apply cross account policies"
+    type = list(object({
+        arn = string
+        repository_url = string
+    }))
 }
-
-variable "repositories" {
-    description = "List of ECR repository paths"
-    type = set(string)
-}
-
-

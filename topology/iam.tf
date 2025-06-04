@@ -69,12 +69,8 @@ data "aws_iam_policy_document" "ecr_mgmt" {
       "ecr:*",
     ]
 
-    resources = flatten([
-        for repo in var.repositories: 
-        [
-          "arn:aws:ecr:*:${local.account_id}:repository/${repo}",
-          "arn:aws:ecr:*:${local.account_id}:repository/${repo}/*"
-        ]
-    ])
+    resources = [ 
+      for repo in var.ecr_repositories: repo.arn 
+    ]
   }
 }
