@@ -39,3 +39,14 @@ variable "ecr_repositories" {
         repository_url = string
     }))
 }
+
+variable "extra_ecr_policy_statements" {
+    description = "Additional policy statements to apply to the ECR repositories"
+    type = list(object({
+        Sid = string
+        Effect = string
+        Action = list(string)
+        Principal = string
+    }))
+    default = []
+}

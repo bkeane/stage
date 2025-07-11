@@ -10,7 +10,7 @@ module "topology" {
         "s3"
     ]
 
-    repositories = [
+    ecr_repositories = [
         "stage"
     ]
 }

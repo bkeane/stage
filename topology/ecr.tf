@@ -13,7 +13,7 @@ resource "aws_ecr_repository_policy" "cross_account_access" {
   repository = local.repository_names[count.index]
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
+    Statement = concat([
       {
         Sid    = "CrossAccountPermission"
         Effect = "Allow"
@@ -47,6 +47,6 @@ resource "aws_ecr_repository_policy" "cross_account_access" {
           }
         }
       }
-    ]
+    ], var.extra_ecr_policy_statements)
   })
 }
