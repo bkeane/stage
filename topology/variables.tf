@@ -40,13 +40,11 @@ variable "ecr_repositories" {
     }))
 }
 
-variable "extra_ecr_policy_statements" {
-    description = "Additional policy statements to apply to the ECR repositories"
+variable "ecr_policy_documents" {
+    description = "Additional policy documents to apply to the ECR repositories"
     type = list(object({
-        Sid = string
-        Effect = string
-        Action = list(string)
-        Principal = string
+        json = string
+        minified_json = string
     }))
     default = []
 }
